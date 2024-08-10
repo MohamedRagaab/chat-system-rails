@@ -24,8 +24,6 @@ RUN apt-get update -qq && \
     libvips \
     pkg-config \
     libmariadb-dev \
-    libmariadb3 \
-    libmariadbclient-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install application gems
@@ -48,17 +46,21 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips \
-    libmariadb3 libmariadbclient-dev && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips libmariadb-dev \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Create a non-root user and set up permissions
+RUN useradd -m -s /bin/bash rails
+
+# Create necessary directories and set ownership
+RUN mkdir -p /rails/tmp/sockets /rails/tmp/pids /rails/tmp/cache /rails/tmp/log && \
+    chown -R rails:rails /rails/tmp
 
 # Copy built artifacts: gems, application
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
 # Run and own only the runtime files as a non-root user for security
-RUN useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
 USER rails:rails
 
 # Entrypoint prepares the database.

@@ -1,18 +1,21 @@
-# app/controllers/applications_controller.rb
-class ApplicationsController < ApplicationController
-  def create
-    application = Application.create!(application_params)
-    render json: application, status: :created
-  end
+module Api
+  module V1
+    class ApplicationsController < ApplicationController
+      def create
+        application = Application.create!(application_params)
+        render json: application, status: :created
+      end
 
-  def show
-    application = Application.find_by!(token: params[:token])
-    render json: application
-  end
+      def show
+        application = Application.find_by!(token: params[:token])
+        render json: application
+      end
 
-  private
+      private
 
-  def application_params
-    params.require(:application).permit(:name)
+      def application_params
+        params.require(:application).permit(:name)
+      end
+    end
   end
 end
