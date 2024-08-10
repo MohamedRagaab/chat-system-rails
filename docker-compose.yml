@@ -7,7 +7,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: web
-    command: ["./bin/rails", "server", "-b", "0.0.0.0"]
+    command: >
+      bash -c "
+        /usr/local/bin/wait-for-it -t 0 db:3306 &&
+        ./bin/rails db:migrate && ./bin/rails server
+      "
     volumes:
       - ".:/rails"
     ports:
@@ -19,17 +23,18 @@ services:
       - sidekiq
     environment:
       RAILS_ENV: production
-      DATABASE_URL: "mysql2://root:123456@db/chat_system_DB"
+      DATABASE_URL: "mysql2://root:root_password@db/chat_system_DB"
       REDIS_URL: "redis://redis:6379/1"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
       SECRET_KEY_BASE: "a2ed125a50ca8daafd1ebdb6c5edccef8d5438512fcaa4fb77cc5c890e4ac7cb99aa8f9702f5d8b87f553caf3b10d67f0312c1e04909cc85c9c5348a029b6338"
 
   # MySQL Database
   db:
-    image: mysql:8.0
+    image: mysql:latest
     container_name: db
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: chat_system_DB
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
@@ -66,7 +71,7 @@ services:
       - db
     environment:
       REDIS_URL: "redis://redis:6379/1"
-      DATABASE_URL: "mysql2://root:123456@db/chat_system_DB"
+      DATABASE_URL: "mysql2://root:root_password@db/chat_system_DB"
 
   # Whenever Cron Job
   cron:

@@ -46,7 +46,7 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips libmariadb-dev \
+    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips libmariadb-dev default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Create a non-root user and set up permissions
@@ -59,6 +59,10 @@ RUN mkdir -p /rails/tmp/sockets /rails/tmp/pids /rails/tmp/cache /rails/tmp/log 
 # Copy built artifacts: gems, application
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
+
+# Copy wait-for-it script
+COPY wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod +x /usr/local/bin/wait-for-it
 
 # Run and own only the runtime files as a non-root user for security
 USER rails:rails
