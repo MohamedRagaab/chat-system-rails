@@ -3,11 +3,10 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: "root"
-  password: 123456
+  password: "123456"
   host: "db"
   database: "chat_system_DB"
   port: 3306
-
 
 development:
   <<: *default
