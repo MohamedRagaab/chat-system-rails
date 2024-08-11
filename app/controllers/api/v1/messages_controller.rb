@@ -1,31 +1,55 @@
 module Api
   module V1
     class MessagesController < ApplicationController
-      before_action :set_chat, only: [:create, :index, :search]
+      include ResponseFormatting
+
+      before_action :set_chat, only: [:create, :index, :search, :update]
+      before_action :set_message, only: [:update]
 
       def create
-        message_number = REDIS.incr("message_number:#{params[:application_token]}:#{params[:chat_id]}")
-
-        # Enqueue job to create message in the background
-        MessageJob.perform_later(params[:application_token], @chat.number, message_number, message_params)
-
-        render json: { message_number: message_number }, status: :accepted
+        begin
+          result = MessageService.create_message(params[:application_token], @chat.number, message_params)
+          render_success(message: "Message creation initiated", data: result)
+        rescue StandardError => e
+          render_error(message: e.message)
+        end
       end
 
       def index
-        messages = @chat.messages
-        render json: messages
+        begin
+          messages = MessageService.list_messages(@chat.number)
+          render_success(message: "Messages retrieved successfully", data: messages)
+        rescue StandardError => e
+          render_error(message: e.message)
+        end
       end
 
       def search
-        results = Message.search(params[:query])
-        render json: results
+        begin
+          results = MessageService.search_messages(params[:query])
+          render_success(message: "Search results", data: results)
+        rescue StandardError => e
+          render_error(message: e.message)
+        end
+      end
+
+      def update
+        begin
+          result = MessageService.update_message(params[:application_token], @chat.number, @message.number, message_params)
+          render_success(message: "Message update initiated", data: result)
+        rescue StandardError => e
+          render_error(message: e.message)
+        end
       end
 
       private
 
       def set_chat
-        @chat = Chat.find_by!(number: params[:chat_id], application: Application.find_by!(token: params[:application_token]))
+        @chat = Chat.find_by!(number: params[:chat_number], application: Application.find_by!(token: params[:application_token]))
+      end
+
+      def set_message
+        @message = @chat.messages.find_by!(number: params[:number])
       end
 
       def message_params

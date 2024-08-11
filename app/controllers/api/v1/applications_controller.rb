@@ -1,14 +1,33 @@
 module Api
   module V1
     class ApplicationsController < ApplicationController
+      include ResponseFormatting
+
       def create
-        application = Application.create!(application_params)
-        render json: application, status: :created
+        begin
+          application = ApplicationService.create_application(application_params)
+          render_success(message: "App created successfully", data: application)
+        rescue StandardError => e
+          render_error(message: e.message)
+        end
       end
 
       def show
-        application = Application.find_by!(token: params[:token])
-        render json: application
+        begin
+          application = ApplicationService.show_application(params[:token])
+          render_success(message: "App retrieved successfully", data: application)
+        rescue StandardError => e
+          render_error(message: e.message)
+        end
+      end
+
+      def update
+        begin
+          application = ApplicationService.update_application(params[:token], application_params)
+          render_success(message: "App updated successfully", data: application)
+        rescue StandardError => e
+          render_error(message: e.message)
+        end
       end
 
       private

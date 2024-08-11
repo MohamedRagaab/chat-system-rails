@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
-  # Application routes
-  resources :applications, param: :token, only: [:create, :show] do
-    # Chat routes within an application
-    resources :chats, param: :id, only: [:create, :index] do
-      # Message routes within a chat
-      resources :messages, param: :id, only: [:create, :index] do
-        # Search messages within a chat
-        collection do
-          get 'search'
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :applications, param: :token, only: [:create, :show, :update] do
+        resources :chats, param: :number, only: [:create, :index] do
+          resources :messages, param: :number, only: [:create, :index, :show, :update] do
+            get 'search', on: :collection
+          end
         end
       end
     end

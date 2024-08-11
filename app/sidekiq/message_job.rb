@@ -1,15 +1,20 @@
-# app/jobs/message_job.rb
 class MessageJob
   include Sidekiq::Job
 
-  def perform(application_token, chat_number, message_number, message_params)
-    # Find the application by token
+  def perform(application_token, chat_number, message_number, message_body, operation_type)
     application = Application.find_by!(token: application_token)
 
-    # Find the chat within the application
     chat = application.chats.find_by!(number: chat_number)
 
-    # Create the message in the database
-    chat.messages.create!(message_params.merge(number: message_number))
+    case operation_type
+    when 'create'
+      chat.messages.create!(number: message_number, body: message_body)
+    when 'update'
+      message = chat.messages.find_by!(number: message_number)
+
+      message.update!(body: message_body)
+    else
+      raise ArgumentError, "Invalid operation type: #{operation_type}"
+    end
   end
 end

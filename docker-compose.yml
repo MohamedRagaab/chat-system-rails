@@ -10,7 +10,8 @@ services:
     command: >
       bash -c "
         /usr/local/bin/wait-for-it -t 0 db:3306 &&
-        ./bin/rails db:migrate && ./bin/rails server
+        ./bin/rails db:create && ./bin/rails db:migrate &&
+        ./bin/rails server
       "
     volumes:
       - ".:/rails"
@@ -54,6 +55,7 @@ services:
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
     ports:
       - "9200:9200"
 
