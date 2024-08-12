@@ -32,71 +32,73 @@ docker-compose up
  
     - Create a new application:
         ``` bash
-        POST /api/v1/applications
+        curl --location 'http://127.0.0.1:3000/api/v1/applications' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "app name"
+}'
         ```
     - Read a specific application:
         ``` bash
-        GET /api/v1/applications/:token
+        curl --location 'http://127.0.0.1:3000/api/v1/applications/:token'
         ```
     - Update a specific application:
         ``` bash
-        PUT /api/v1/applications/:token
+        curl --location --request PUT 'http://127.0.0.1:3000/api/v1/applications/:token' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "updated app"
+}'
         ```
 
   - Chats:
  
     - Create a new chat:
         ``` bash
-        POST /api/v1/applications/:token/chats
+        curl --location --request POST 'http://127.0.0.1:3000/api/v1/applications/:token/chats'
         ```
-    - List chats under a specific application:
+    - Read a specific application:
         ``` bash
-        GET /api/v1/applications/:token/chats
+        curl --location 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:number'
         ```
         
   - Message:
  
     - Create a new message:
         ``` bash
-        POST /api/v1/applications/:token/chats/:number/messages
+        curl --location 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:number/messages' \
+--header 'Content-Type: application/json' \
+--data '{
+  "message": {
+    "body": "message body"
+  }
+}
+'
         ```
     - Read a specific message under a chat:
         ``` bash
-        GET /api/v1/applications/:token/chats/:chat_number/messages/:message_number
+        curl --location 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:chat_number/messages/:message_number'
         ```
     - Update a specific message:
         ``` bash
-        PUT /api/v1/applications/:token/chats/:number/messages/:id
+        curl --location --request PUT 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:chat_number/messages/:message_number' \
+--header 'Content-Type: application/json' \
+--data '{
+  "message": {
+    "body": "updated message"
+  }
+}
+'
         ```
     - List all messages under a specific chat:
         ``` bash
-        GET /api/v1/applications/:token/chats/:number/messages
+        curl --location 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:chat_number/messages'
         ```
 
-## Examples 🖼️
-* Create an application
-<div align='center'>
-<img height="350px" src="https://github.com/MohamedRagaab/Instabug-Backend-Challenge/assets/38363762/1d3e1d04-67e0-48a2-a48b-e64d14f18808">
-<hr/>
-</div>
-
-* Create a chat under the app
-<div align='center'>
-<img height="350px" src="https://github.com/MohamedRagaab/Instabug-Backend-Challenge/assets/38363762/26033bfa-6fcc-4a61-a628-559fc7adfaf3">
-<hr/>
-</div>
-
-* Create a message under the chat
-<div align='center'>
-<img height="350px" src="https://github.com/MohamedRagaab/Instabug-Backend-Challenge/assets/38363762/e6fc4235-4f36-4228-b0e1-593efb2581bb">
-<hr/>
-</div>
-
-* search the message under the chat
-<div align='center'>
-<img height="350px" src="https://github.com/MohamedRagaab/Instabug-Backend-Challenge/assets/38363762/405315fe-1abe-4438-a5c0-ae58c91e5691">
-<hr/>
-</div>
+    - Search messages under a specific chat:
+        ``` bash
+       curl --location 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:chat_number/messages/search?query='message body''
+        ```
 
 ## Repo Content :white_check_mark:
 - [x] Application Endpoints
