@@ -31,12 +31,13 @@ docker-compose up
   - Application:
  
     - Create a new application:
+
         ``` bash
         curl --location 'http://127.0.0.1:3000/api/v1/applications' \
---header 'Content-Type: application/json' \
---data '{
-    "name": "app name"
-}'
+        --header 'Content-Type: application/json' \
+        --data '{
+          "name": "app name"
+        }'
         ```
     - Read a specific application:
         ``` bash
@@ -45,10 +46,10 @@ docker-compose up
     - Update a specific application:
         ``` bash
         curl --location --request PUT 'http://127.0.0.1:3000/api/v1/applications/:token' \
---header 'Content-Type: application/json' \
---data '{
-    "name": "updated app"
-}'
+        --header 'Content-Type: application/json' \
+        --data '{
+          "name": "updated app"
+        }'
         ```
 
   - Chats:
@@ -67,13 +68,13 @@ docker-compose up
     - Create a new message:
         ``` bash
         curl --location 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:number/messages' \
---header 'Content-Type: application/json' \
---data '{
-  "message": {
-    "body": "message body"
-  }
-}
-'
+        --header 'Content-Type: application/json' \
+        --data '{
+          "message": {
+            "body": "message body"
+          }
+        }
+        '
         ```
     - Read a specific message under a chat:
         ``` bash
@@ -81,14 +82,15 @@ docker-compose up
         ```
     - Update a specific message:
         ``` bash
-        curl --location --request PUT 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:chat_number/messages/:message_number' \
---header 'Content-Type: application/json' \
---data '{
-  "message": {
-    "body": "updated message"
-  }
-}
-'
+        curl --location --request PUT           
+        'http://127.0.0.1:3000/api/v1/applications/:token/chats/:chat_number/messages/:message_number' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "message": {
+            "body": "updated message"
+          }
+        }
+        '
         ```
     - List all messages under a specific chat:
         ``` bash
