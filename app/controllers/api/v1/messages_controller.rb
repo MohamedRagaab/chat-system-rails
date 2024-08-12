@@ -3,8 +3,8 @@ module Api
     class MessagesController < ApplicationController
       include ResponseFormatting
 
-      before_action :set_chat, only: [:create, :index, :search, :update]
-      before_action :set_message, only: [:update]
+      before_action :set_chat, only: [:create, :index, :search, :update, :show]
+      before_action :set_message, only: [:update, :show]
 
       def create
         begin
@@ -26,7 +26,7 @@ module Api
 
       def search
         begin
-          results = MessageService.search_messages(params[:query])
+          results = MessageService.search_messages(params[:query], @chat.id)
           render_success(message: "Search results", data: results)
         rescue StandardError => e
           render_error(message: e.message)
@@ -37,6 +37,15 @@ module Api
         begin
           result = MessageService.update_message(params[:application_token], @chat.number, @message.number, message_params)
           render_success(message: "Message update initiated", data: result)
+        rescue StandardError => e
+          render_error(message: e.message)
+        end
+      end
+
+      def show
+        begin
+          message = MessageService.find_message(@chat.number, @message.number)
+          render_success(message: "Message retrieved successfully", data: message)
         rescue StandardError => e
           render_error(message: e.message)
         end

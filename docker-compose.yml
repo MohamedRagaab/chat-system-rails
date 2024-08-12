@@ -71,9 +71,11 @@ services:
     depends_on:
       - redis
       - db
+      - elasticsearch
     environment:
       REDIS_URL: "redis://redis:6379/1"
       DATABASE_URL: "mysql2://root:root_password@db/chat_system_DB"
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
 
   # Whenever Cron Job
   cron:

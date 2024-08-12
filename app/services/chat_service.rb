@@ -13,4 +13,9 @@ class ChatService
     application = Application.find_by!(token: application_token)
     application.chats
   end
+
+  def self.find_chat(application_token, chat_number)
+    application = Application.find_by!(token: application_token)
+    application.chats.find_by!(number: chat_number)
+  end
 end

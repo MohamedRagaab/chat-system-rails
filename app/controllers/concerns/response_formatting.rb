@@ -5,6 +5,8 @@ module ResponseFormatting
     def render_success(message:, data:)
       data = data.as_json
       data.delete("id")
+      data.delete("chat_id")
+      data.delete("application_id")
 
       render json: {
         message: message,

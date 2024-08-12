@@ -23,6 +23,15 @@ module Api
         end
       end
 
+      def show
+        begin
+          chat = ChatService.find_chat(params[:application_token], params[:chat_number])
+          render_success(message: "Chat retrieved successfully", data: chat)
+        rescue StandardError => e
+          render_error(message: e.message)
+        end
+      end
+
       private
 
       def set_application
