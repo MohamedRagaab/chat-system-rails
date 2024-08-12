@@ -31,7 +31,7 @@ services:
 
   # MySQL Database
   db:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: db
     environment:
       MYSQL_ROOT_PASSWORD: root_password
@@ -77,16 +77,19 @@ services:
       DATABASE_URL: "mysql2://root:root_password@db/chat_system_DB"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
 
-  # Whenever Cron Job
+  # Cron Jobs
   cron:
-    image: ruby:3.0.6
+    build:
+      context: .
+      dockerfile: Dockerfile-cron
     container_name: cron
-    command: ["whenever", "update-crontab"]
     volumes:
-      - ".:/rails"
+      - ".:/app"
     depends_on:
       - web
-    entrypoint: ["/bin/sh", "-c", "bundle exec whenever --update-crontab"]
+    environment:
+      RAILS_ENV: production
+      REDIS_URL: "redis://redis:6379/1"
 
 volumes:
   mysql_data:

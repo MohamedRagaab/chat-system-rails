@@ -1,0 +1,30 @@
+# Use an appropriate Ruby base image
+ARG RUBY_VERSION=3.0.6
+FROM ruby:$RUBY_VERSION
+
+# Install dependencies
+RUN apt-get update -qq && \
+    apt-get install -y build-essential libpq-dev nodejs sqlite3 cron && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set the working directory
+WORKDIR /app
+
+# Install Bundler and Whenever
+RUN gem install bundler whenever
+
+# Copy Gemfile and Gemfile.lock
+COPY Gemfile Gemfile.lock ./
+
+# Install Ruby gems
+RUN bundle install
+
+# Copy the application code
+COPY . .
+
+# Copy crontab configuration from Whenever
+COPY entrypoint-cron.sh /usr/local/bin/entrypoint-cron.sh
+RUN chmod +x /usr/local/bin/entrypoint-cron.sh
+
+# Start cron service
+ENTRYPOINT ["/usr/local/bin/entrypoint-cron.sh"]
