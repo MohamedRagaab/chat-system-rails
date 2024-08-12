@@ -4,6 +4,12 @@ parallel and thus multiple requests may be processed concurrently. It handles ra
 conditions. It minimizes the queries and avoids writing directly to MySQL while serving the
 requests(especially for the chats and messages creation endpoints) and it uses a queuing
 system to achieve that and the app is containerized.
+* Sequence Diagram
+<div align='center'>
+<img height="350px" src="https://github.com/user-attachments/assets/20f0cb44-bd80-45df-81ff-905549ba0968">
+<hr/>
+</div>
+
 ## Languages and frameworks 📑
 * Ruby on Rails
 * MySql
