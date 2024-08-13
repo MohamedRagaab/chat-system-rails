@@ -104,7 +104,7 @@ docker-compose up
 
     - Search messages under a specific chat:
         ``` bash
-       curl --location 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:chat_number/messages/search?query='message body''
+       curl --location 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:chat_number/messages/search?query=final'
         ```
 
 ## Repo Content :white_check_mark:
