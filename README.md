@@ -88,14 +88,14 @@ docker-compose up
         ```
     - Update a specific message:
         ``` bash
-        curl --location --request PUT           
-        'http://127.0.0.1:3000/api/v1/applications/:token/chats/:chat_number/messages/:message_number' \
+        curl --location --request PUT 'http://127.0.0.1:3000/api/v1/applications/e965df9a2bfc2eb7d5cb34cac490a182/chats/1/messages/1' \
         --header 'Content-Type: application/json' \
         --data '{
-          "message": {
-            "body": "updated message"
-          }
+            "message": {
+                "body": "final 44"
+             }  
         }
+
         '
         ```
     - List all messages under a specific chat:
