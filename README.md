@@ -64,7 +64,7 @@ docker-compose up
         ``` bash
         curl --location --request POST 'http://127.0.0.1:3000/api/v1/applications/:token/chats'
         ```
-    - Read a specific application:
+    - Read a specific chat:
         ``` bash
         curl --location 'http://127.0.0.1:3000/api/v1/applications/:token/chats/:number'
         ```
